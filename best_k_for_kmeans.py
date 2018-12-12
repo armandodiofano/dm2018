@@ -3,29 +3,34 @@ import pandas
 import numpy
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
 
-k_max = 50 + 1
 df = pandas.read_csv("credit_default_corrected_train.csv")
-dist = numpy.empty(k_max, dtype=float);
-kmeans_df = df.drop(['credit_default','education','status','sex'], axis=1)
+
+X = df.drop(['credit_default','education','status','sex'], axis=1)
 
 scaler = MinMaxScaler()
-kmeans_df = scaler.fit_transform(kmeans_df.values)
+X = scaler.fit_transform(X.values)
 
-for k in range(2,k_max):
-    kmeans = KMeans(n_clusters=k, random_state=0).fit(kmeans_df)
-    dist[k] = kmeans.inertia_
+sse_list = list()
+silhoutte_list = list()
 
-axes = plt.gca()
-axes.set_xlim([2,k_max])
-axes.set_ylim([400, 1500])
+max_k = 20
+for k in range(2, max_k + 1):
+    kmeans = KMeans(n_clusters=k, max_iter=100)
+    kmeans.fit(X)
 
-plt.xticks(numpy.arange(0,k_max,10))
+    sse_list.append(kmeans.inertia_)
+    silhoutte_list.append(silhouette_score(X, kmeans.labels_))
 
-plt.xlabel("K");
-plt.ylabel("SSE")
+plt.plot(range(2, len(sse_list) + 2), sse_list)
+plt.plot(range(2, len(silhoutte_list) + 2), silhoutte_list)
 
-plt.plot(dist)
+plt.ylabel('SSE')
+plt.xlabel('K')
+plt.xticks(numpy.arange(0,max_k,10))
+plt.tick_params(axis='both', which='major')
+
 plt.show()
 
 #best_k = 6
