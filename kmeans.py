@@ -2,22 +2,31 @@ import pandas
 import numpy
 from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from mpl_toolkits.mplot3d import Axes3D 
 
-best_k = 6;
-df = pandas.read_csv("corrected_tr.csv")
-dist = numpy.empty(k_max, dtype=float);
-kmeans_df = df.drop(['age','credit_default','education','status','sex'], axis=1)
-kmeans = KMeans(n_clusters=best_k, random_state=0).fit(kmeans_df)
-dist[k] = kmeans.inertia_
+df = pandas.read_csv("credit_default_corrected_train.csv")
+kmeans_df = df.drop(['credit_default','education','status','sex'], axis=1)
 
-axes = plt.gca()
-axes.set_xlim([2,k_max])
-axes.set_ylim([0.5 * 10**14, 3 * 10**14])
+scaler = MinMaxScaler()
+kmeans_df = scaler.fit_transform(kmeans_df.values)
 
-plt.xticks(numpy.arange(2,k_max,1))
+kmeanses = list()
 
-plt.xlabel("K");
-plt.ylabel("SSE")
+for i in range(0,10):
+    kmeanses.append(KMeans(n_clusters=6, random_state=0).fit(kmeans_df))
 
-plt.plot(dist)
+best_kmeans = kmeanses.pop(9)
+
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+
+
+ax.set_xlabel('X Label')
+ax.set_ylabel('Y Label')
+ax.set_zlabel('Z Label')
+
+ax.scatter(xs, ys, zs, c=c, marker=m)
+
 plt.show()
+

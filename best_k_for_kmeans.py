@@ -1,13 +1,13 @@
+import matplotlib.pyplot as plt
 import pandas
 import numpy
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 
-k_max = 20 + 1
+k_max = 50 + 1
 df = pandas.read_csv("credit_default_corrected_train.csv")
 dist = numpy.empty(k_max, dtype=float);
-kmeans_df = df.drop(['age','credit_default','education','status','sex'], axis=1)
+kmeans_df = df.drop(['credit_default','education','status','sex'], axis=1)
 
 scaler = MinMaxScaler()
 kmeans_df = scaler.fit_transform(kmeans_df.values)
@@ -18,9 +18,9 @@ for k in range(2,k_max):
 
 axes = plt.gca()
 axes.set_xlim([2,k_max])
-axes.set_ylim([0.5 * 10**14, 3 * 10**14])
+axes.set_ylim([400, 1500])
 
-plt.xticks(numpy.arange(2,k_max,1))
+plt.xticks(numpy.arange(0,k_max,10))
 
 plt.xlabel("K");
 plt.ylabel("SSE")
@@ -28,3 +28,4 @@ plt.ylabel("SSE")
 plt.plot(dist)
 plt.show()
 
+#best_k = 6
