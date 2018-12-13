@@ -18,9 +18,14 @@ def substract_cluster(x, c):
     cluster_map['cluster'] = kmeans.labels_
     return x.iloc[cluster_map[cluster_map.cluster != c].index]
 
-number_of_clusters = 5;
+number_of_clusters = 4;
 
 df = pandas.read_csv("credit_default_corrected_train.csv")
+dio_bambu = df.drop(['credit_default','education','status','sex', 'limit'], axis=1)
+statuses = df[['ps-sep', 'ps-aug', 'ps-jul', 'ps-jun', 'ps-may', 'ps-apr']]
+payments = df[['pa-sep', 'pa-aug', 'pa-jul', 'pa-jun', 'pa-may', 'pa-apr']]
+billings = df[['ba-sep', 'ba-aug', 'ba-jul', 'ba-jun', 'ba-may', 'ba-apr']]
+
 kmeans_df = df.drop(['credit_default','education','status','sex', 'limit'], axis=1)
 
 scaler = MinMaxScaler()
@@ -40,15 +45,45 @@ for i in range(0, number_of_clusters):
     print "mode status:", cluster.status.mode()[0]
     print "mode sex:", cluster.sex.mode()[0]
 
+centers = scaler.inverse_transform(kmeans.cluster_centers_)
+
+#Stampo i centroidi di ogni cluster relativi ai payment statuses
+#si evince che il cluster 2 (quello con piu' % di credit default)
+#ha le coordinate dei centroidi (di cui sopra) molto piu' alte dei restanti
+'''
+for i in range(0, len(centers)):
+    plt.plot(centers[i, 1:7], marker='o', label='cluster %s' % i)
+plt.tick_params(axis='both', which='major')
+plt.xticks(range(0,len(statuses.columns)), statuses.columns)
+plt.legend()
+'''
+
+#stampo i centroidi per i billing amounts
+'''
+for i in range(0, len(centers)):
+    plt.plot(centers[i,7:13], marker='o', label='cluster %s' % i)
+plt.tick_params(axis='both', which='major')
+plt.xticks(range(0,len(billings.columns)), billings.columns)
+plt.legend()
+'''
+
+#stampo i centroidi per i payments 
+'''
+for i in range(0, len(centers)):
+    plt.plot(centers[i,13:19], marker='o', label='cluster %s' % i)
+plt.tick_params(axis='both', which='major')
+plt.xticks(range(0,len(payments.columns)), payments.columns)
+plt.legend()
+'''
 
 
+'''
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-X = substract_cluster(df, 2)
-
-xdim = 'ba-jun'
-ydim = 'pa-jul'
-zdim = 'ps-jun'
+X = df
+xdim = 'ba-aug'
+ydim = 'pa-sep'
+zdim = 'ps-aug'
 
 xs = X[xdim]
 ys = X[ydim]
@@ -58,13 +93,8 @@ ax.set_xlabel(xdim)
 ax.set_ylabel(ydim)
 ax.set_zlabel(zdim)
 
-ax.scatter(xs, ys, zs, c=numpy.where(kmeans.labels_ != 2))
-
-
+ax.scatter(xs, ys, zs, c=kmeans.labels_)
 '''
-plt.scatter(df['ba-jun'], df['pa-jul'], c=kmeans.labels_)
-plt.xlabel("ba")
-plt.ylabel("pa")
-'''
+
 plt.show()
 
