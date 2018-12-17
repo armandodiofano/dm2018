@@ -20,7 +20,7 @@ print(df.head())
 
 baskets = df.values.tolist()
 print("START")
-itemsets = apriori(baskets, supp=10, zmin=2, target='a') 
+itemsets = apriori(baskets, supp=10, zmin=2, target='a')  #supporto 10%
 print('Number of itemsets:', len(itemsets))
-rules = apriori(baskets, supp=10, zmin=2, target='r', conf=80, report='ascl') 
+rules = apriori(baskets, supp=10, zmin=2, target='r', conf=80, report='ascl') #supporto 10%  confidenza 80%
 print('Number of rules:', len(rules))
