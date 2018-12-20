@@ -28,7 +28,7 @@ for i in percent:
 
     f = open(str(i)+"support-maximal["+str(len(itemsets))+"].txt", "w") 
     for j in range(0,len(itemsets)):
-        f.write(""+ str(i) + str(itemsets[j]))
+        f.write(""+ str(j) + str(itemsets[j]))
         f.write("\n\n")
     f.close()
 
@@ -40,6 +40,6 @@ for i in percent:
 
         f = open("rules "+str(i)+"support-"+str(k)+"confidence["+str(len(rules))+"].txt", "w") 
         for j in range(0,len(rules)):
-            f.write(""+ str(i) + str(rules[j]))
+            f.write(""+ str(j) + str(rules[j]))
             f.write("\n\n")
         f.close()
