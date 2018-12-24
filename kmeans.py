@@ -19,7 +19,8 @@ def substract_cluster(x, c):
     return x.iloc[cluster_map[cluster_map.cluster != c].index]
 
 number_of_clusters = 4;
-
+color_labels = ['b', 'y', 'r', 'g']
+label_names= ['Senza rischio', 'Piccoli pagatori', 'Ritardatari', 'Grandi pagatori']
 df = pandas.read_csv("credit_default_corrected_train.csv")
 
 statuses = df[['ps-sep', 'ps-aug', 'ps-jul', 'ps-jun', 'ps-may', 'ps-apr']]
@@ -38,46 +39,56 @@ for i in range(0, number_of_clusters):
     cluster = select_cluster(df, i)
     rows = float(len(cluster.index))
     print "------------------"
-    print "cluster", i
+    print label_names[i]
+    print cluster.shape[0]
     print "% credit default:", len(cluster[cluster.credit_default == 1].index)/rows
-    print "mean age:", cluster.age.mean()
+    print "mean limit:", cluster.limit.mean(), cluster.limit.std()
+    print "mean age:", cluster.age.mean(), cluster.age.std()
     print "mode education:", cluster.education.mode()[0]
     print "mode status:", cluster.status.mode()[0]
     print "mode sex:", cluster.sex.mode()[0]
-
+    sta = cluster[['ps-sep', 'ps-aug']]
+    pay = cluster[['pa-sep', 'pa-aug']]
+    bay = cluster[['ba-sep', 'ba-aug']]
+    print sta.mean(), sta.std()
+    print pay.mean(), pay.std()
+    print bay.mean(), bay.std()
 centers = scaler.inverse_transform(kmeans.cluster_centers_)
 
+'''
 #Stampo i centroidi di ogni cluster relativi ai payment statuses
 #si evince che il cluster 2 (quello con piu' % di credit default)
 #ha le coordinate dei centroidi (di cui sopra) molto piu' alte dei restanti
-'''
+fig, (ax1,ax2,ax3) = plt.subplots(3, 1)
+
 for i in range(0, len(centers)):
-    plt.plot(centers[i, 1:7], marker='o', label='cluster %s' % i)
-plt.tick_params(axis='both', which='major')
+    ax1.plot(centers[i, 1:7], color=color_labels[i], marker='o', label=label_names[i])
+ax1.tick_params(axis='both', which='major')
+plt.sca(ax1)
 plt.xticks(range(0,len(statuses.columns)), statuses.columns)
-plt.legend()
-'''
+ax1.legend()
+
 
 #stampo i centroidi per i billing amounts
-'''
+
 for i in range(0, len(centers)):
-    plt.plot(centers[i,7:13], marker='o', label='cluster %s' % i)
-plt.tick_params(axis='both', which='major')
+    ax2.plot(centers[i,7:13], color=color_labels[i], marker='o', label=label_names[i])
+ax2.tick_params(axis='both', which='major')
+plt.sca(ax2)
 plt.xticks(range(0,len(billings.columns)), billings.columns)
-plt.legend()
-'''
+ax2.legend()
 
 #stampo i centroidi per i payments 
-'''
+
 for i in range(0, len(centers)):
-    plt.plot(centers[i,13:19], marker='o', label='cluster %s' % i)
-plt.tick_params(axis='both', which='major')
+    ax3.plot(centers[i,13:19], marker='o', color=color_labels[i], label=label_names[i])
+ax3.tick_params(axis='both', which='major')
+plt.sca(ax3)
 plt.xticks(range(0,len(payments.columns)), payments.columns)
-plt.legend()
+ax3.legend()
 '''
 
 
-'''
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
 X = df
@@ -93,8 +104,12 @@ ax.set_xlabel(xdim)
 ax.set_ylabel(ydim)
 ax.set_zlabel(zdim)
 
-ax.scatter(xs, ys, zs, c=kmeans.labels_)
-'''
+
+diolupo = pandas.DataFrame()
+diolupo["a"] = kmeans.labels_
+diolupo["a"] = diolupo["a"].replace({0:'b',1:'y', 2:'r', 3:'g'})
+print diolupo["a"]
+ax.scatter(xs, ys, zs, c=diolupo["a"].values)
 
 plt.show()
 

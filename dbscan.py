@@ -26,10 +26,10 @@ X = df.drop(['credit_default','education','status','sex', 'age', 'limit', "ps-ap
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X.values)
 
-dist = pdist(X, 'cosine')
+dist = pdist(X, 'euclidean')
 dist = squareform(dist)
 
-dbscan = DBSCAN(eps = 0.06, min_samples = 670, metric='precomputed')
+dbscan = DBSCAN(eps = 0.30, min_samples = 350, metric='precomputed')
 dbscan.fit(dist)
 '''
 for i in range(0, len(dbscan.labels_[1:])):

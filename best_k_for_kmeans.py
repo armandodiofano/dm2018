@@ -26,7 +26,7 @@ plt.plot(range(2, len(sse_list) + 2), sse_list)
 
 plt.ylabel('SSE')
 plt.xlabel('K')
-plt.xticks(numpy.arange(0,max_k,1))
+plt.xticks(numpy.arange(0,max_k+1,1))
 plt.tick_params(axis='both', which='major')
 
 plt.show()

@@ -11,13 +11,11 @@ df = pandas.read_csv("credit_default_corrected_train.csv")
 
 X = df.drop(['credit_default','education','status','sex', 'age','limit', "ps-apr","ps-may", "ps-jun", "pa-apr", "pa-may", "pa-jun", "ba-apr", 'ba-may','ba-jun'], axis=1)
 print X.columns
-scaler = MinMaxScaler()
-X = scaler.fit_transform(X.values)
 
-dist = pdist(X, 'cosine')
+dist = pdist(X, 'euclidean')
 dist = squareform(dist)
 
-k = 670
+k = 350
 
 kth_distances = list()
 for d in dist:
