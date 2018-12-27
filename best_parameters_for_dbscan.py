@@ -9,13 +9,15 @@ from scipy.spatial.distance import pdist, squareform
 
 df = pandas.read_csv("credit_default_corrected_train.csv")
 
-X = df.drop(['credit_default','education','status','sex', 'age','limit', "ps-apr","ps-may", "ps-jun", "pa-apr", "pa-may", "pa-jun", "ba-apr", 'ba-may','ba-jun'], axis=1)
-print X.columns
+X = df.drop(['credit_default','education','status','sex', 'age','limit', "pa-apr", "pa-may", "pa-jun", "pa-jul", "pa-aug", "pa-sep", "ba-apr", 'ba-may','ba-jun', "ba-jul", "ba-aug", "ba-sep"], axis=1)
+
+scaler = MinMaxScaler()
+X = scaler.fit_transform(X.values)
 
 dist = pdist(X, 'euclidean')
 dist = squareform(dist)
 
-k = 350
+k = 700
 
 kth_distances = list()
 for d in dist:

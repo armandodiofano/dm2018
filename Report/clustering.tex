@@ -196,4 +196,169 @@ e \texttt{billing amount} mostriamo i valori degli ultimi due mesi.
 
 \end{center}
 
-Si noti come il gruppo dei ritardatari ha un limite imposto dalla banca molto pi\`u basso rispetto agli altri cluster. Segno che la banca ha valutato ottimamente i profili nella scelta di concessione del credito.
+Si noti come il gruppo dei ritardatari ha un limite 
+imposto dalla banca molto pi\`u basso rispetto 
+agli altri cluster. Segno che la banca ha valutato 
+in modo abbastanza buono i profili nella scelta 
+di concessione del credito.
+
+\section{DBSCAN}
+L'algoritmo DBSCAN \`e stato eseguito su un dataset
+modificato rispetto alla esecuzione del KMeans.
+Questo \`e stato dovuto per permettere all'algoritmo
+di funzionare al meglio. Dopo molteplici esperimenti
+infatti i migliori risultati per DBSCAN sono stati ottenuti
+su un dataset composto dai soli attributi 
+\texttt{payment status} di ciascun mese. Ci\`o \`e in linea
+con la teoria in quanto DBSCAN ha problemi su dati con un 
+numero troppo elevato di dimensioni.
+Per stimare i parametri ottimali dell'algoritmo si sono
+utilizzati i grafici del k-dist$^2$, utilizzando la 
+distanza di Manhatthan. I valori che ci hanno permesso di
+ottenere un (primo) risultato soddisfacente sono stati
+$\varepsilon=0.30$ e $minPoints=350$.
+Il primo risultato \`e stato l'individuazione da parte
+di DBSCAN di due cluster di dimensioni molto diverse tra
+loro ma con un significato molto forte.
+
+\paragraph{Senza rischio}
+Composto da 8597 persone, formato da persone che non
+costituiscono alcun rischio in quanto i loro valori 
+di payment status sono costantemente sotto lo 0.
+
+\paragraph{Ritardatari}
+Composto da sole 454 unit\`a. Ci\`o che lo contraddistingue
+\`e un costante ritardo nei pagamenti dei propri debiti.
+Queste sono le persone che maggiormente rappresentano
+un rischio di perdita di credito per la banca.
+
+Data la notevole disparit\`a di dimensioni dei due cluster, 
+abbiamo deciso di eseguire nuovamente DBSCAN sul cluster
+dei senza rischio al fine di verificare se anch'esso avrebbe
+trovato la conformazione dei tre cluster individuati da KMeans.
+Abbiamo rieseguito l'algoritmo con gli stessi parametri e il
+risultato \`e stato l'individuazione di tre cluster con una 
+notevole quantit\`a di rumore. 
+
+\paragraph{Rifinanziatori}
+Cluster composto da 3271 persone. Sono contraddistinti da un uso 
+intensivo del revolving credit. Le spese sono di entit\`a media.
+Per questo motivo sospettiamo sia un merge tra i
+\textit{Grandi pagatori} e \textit{Piccoli pagatori} trovati
+da KMeans.
+
+\paragraph{Senza rischio}
+Cluster composto da 635 persone. Sono le persone che pagano
+sempre in orario, ogni mese rispettano la scadenza e
+ripagano in pieno il loro debito. Hanno caratteristiche
+molto simili all'omonimo di KMeans.
+
+\paragraph{No consumption}
+Cluster composto da 703 persone. Questa \`e la novit\`a 
+rispetto a KMeans. Questo cluster incorpora tutte le persone
+che non fanno uso del loro credito, evidenziato da un valore
+di \textit{No consumption} molto ripetuto.
+
+In conclusione, DBSCAN in qualche modo valida i risultati
+ottenuti da KMeans, in quanto due diversi algoritmi, su due
+selezioni diverse del dataset hanno trovato dei risultati
+molto simili, fatta eccezione per il cluster dei
+\textit{No consumption}.
+
+Di seguito riportiamo una tabella riassuntiva delle
+caratteristiche dei cluster trovati:
+
+\begin{center}
+	
+	\begin{tabular}{c|c|c|c|c|c|c}
+		\hline
+		\textbf{Cluster} & \textbf{ps-sep} 
+		& \textbf{ps-aug} & \textbf{pa-sep} 
+		& \textbf{pa-aug}\\
+		\hline
+		Senza rischio & 
+		$-1.0 (\pm 0.0)$ & 
+		$-1.0 (\pm 0.0)$ &
+		$6.8k (\pm 14.0k)$ &
+		$6.4k (\pm 12k)$\\
+		\hline
+		No consumption & 
+		$-2.0 (\pm 0.71)$ & 
+		$-2.0 (\pm 0.71)$ &
+		$4.8k (\pm 14k)$ &
+		$5k (\pm 14k)$\\
+		\hline
+		Rifinanziatori & 
+		$0.0 (\pm 0.0)$ & 
+		$0.0 (\pm 0.0)$ &
+		$6k (\pm 13k)$ &
+		$5.9k (\pm 16k)$\\
+		\hline
+		Ritardatari & 
+		$1.72 (\pm 0.68)$ & 
+		$2.10 (\pm 0.33)$ &
+		$2.5k (\pm 3.9k)$ &
+		$2.5k (\pm 4.3k)$\\
+		\hline
+		& 
+		\textbf{ba-sep} & 
+		\textbf{ba-aug} & 
+		\textbf{limit} & 
+		\textbf{age} &\\
+		\hline
+		Senza rischio & 
+		$6.3k (\pm 12k)$ &
+		$6.4k (\pm 12k)$ &
+		$221k (\pm 123k)$ &
+		$36 (\pm 8)$\\
+		\hline
+		No consumption &
+		$7k (\pm 23k)$ &
+		$6k (\pm 19k)$ &
+		$248k (\pm 122k)$ &
+		$36 (\pm 7)$\\
+		\hline
+		Rifinanziatori &
+		$93k (\pm 88k)$ &
+		$89k (\pm 85k)$ &
+		$161k (\pm 128k)$ &
+		$35 (\pm 9)$\\
+		\hline
+		Ritardatari &
+		$52k (\pm 56k)$ &
+		$53k (\pm 56k)$ &
+		$92k (\pm 68k)$ &
+		$35 (\pm 9)$\\
+		\hline
+		& 
+		\textbf{sex} & 
+		\textbf{status} & 
+		\textbf{education} & 
+		\textbf{default}\\
+		\hline
+		Senza rischio & 
+		F &
+		Single &
+		Graduate school&
+		14\%\\
+		\hline
+		No consumption & 
+		F &
+		Single &
+		Graduate School &
+		11\%\\
+		\hline
+		Rifinanziatori & 
+		F &
+		Single &
+		University&
+		9\%\\
+		\hline
+		Ritardatari & 
+		F &
+		Single &
+		University&
+		68\%\\
+		\hline
+	\end{tabular}
+\end{center}

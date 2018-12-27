@@ -21,30 +21,52 @@ def substract_cluster(x, c):
 
 df = pandas.read_csv("credit_default_corrected_train.csv")
 
-X = df.drop(['credit_default','education','status','sex', 'age', 'limit', "ps-apr","ps-may", "ps-jun", "pa-apr", "pa-may", "pa-jun", "ba-apr", 'ba-may','ba-jun'], axis=1)
+X = df.drop(['credit_default','education','status', 'sex', 'age','limit', "pa-apr", "pa-may", "pa-jun", "pa-jul", "pa-aug", "pa-sep", "ba-apr", 'ba-may','ba-jun', "ba-jul", "ba-aug", "ba-sep"], axis=1)
 
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X.values)
 
-dist = pdist(X, 'euclidean')
+dist = pdist(X, 'cityblock')
+dist = squareform(dist)
+
+dbscan = DBSCAN(eps = 0.30, min_samples = 350, metric='precomputed')
+dbscan.fit(dist)
+
+'''
+X = select_cluster(df, 0)
+X = df.drop(['credit_default','education','status', 'sex', 'age','limit', "pa-apr", "pa-may", "pa-jun", "pa-jul", "pa-aug", "pa-sep", "ba-apr", 'ba-may','ba-jun', "ba-jul", "ba-aug", "ba-sep"], axis=1)
+dist = pdist(X, 'cityblock')
 dist = squareform(dist)
 
 dbscan = DBSCAN(eps = 0.30, min_samples = 350, metric='precomputed')
 dbscan.fit(dist)
 '''
-for i in range(0, len(dbscan.labels_[1:])):
+
+
+#0.30 cityblock 350
+#0.18 euclidean 350
+#0.18 cityblock 700
+for i in range(0, len(numpy.unique(dbscan.labels_)[1:])):
     cluster = select_cluster(df, i)
     rows = float(len(cluster.index))
     print "------------------"
     print "cluster", i
     print "% credit default:", len(cluster[cluster.credit_default == 1].index)/rows
-    print "mean age:", cluster.age.mean()
+    print "mean limit:", cluster.limit.mean(), cluster.limit.std()
+    print "mean age:", cluster.age.mean(), cluster.age.std()
+    print "mean age:", cluster.age.mean(), cluster.age.std()
     print "mode education:", cluster.education.mode()[0]
     print "mode status:", cluster.status.mode()[0]
     print "mode sex:", cluster.sex.mode()[0]
-'''
+    sta = cluster[['ps-sep', 'ps-aug', 'ps-jul', 'ps-jun', 'ps-may']]
+    pay = cluster[['pa-sep', 'pa-aug', 'pa-jul', 'pa-jun', 'pa-may']]
+    bay = cluster[['ba-sep', 'ba-aug', 'ba-jul', 'ba-jun', 'ba-may']]
+    print sta.mean(), sta.std()
+    print pay.mean(), pay.std()
+    print bay.mean(), bay.std()
+
 print(numpy.unique(dbscan.labels_, return_counts=True))
 
-#print "silhoutte_score:", silhouette_score(X, dbscan.labels_)
+print "silhoutte_score:", silhouette_score(X, dbscan.labels_)
 
 
