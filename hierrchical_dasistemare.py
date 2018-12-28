@@ -32,8 +32,6 @@ for i in range(0, len(nd.unique(hier.labels_))):
 
 cf = select_cluster(df,0)
 X = cf.drop(['credit_default','education','status', 'sex', 'age'], axis=1)
-scaler = MinMaxScaler()
-X = scaler.fit_transform(X.values)
 
 hier = AgglomerativeClustering(affinity='euclidean', linkage='complete', n_clusters=3) #funzione che fa clustering con label
 hier = hier.fit(X)
