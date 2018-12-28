@@ -19,7 +19,18 @@ X = df.drop(['credit_default','education','status', 'sex', 'age'], axis=1)
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X.values)
 
-hier = AgglomerativeClustering(affinity='euclidean', linkage='complete', n_clusters=2) 
+distanza="euclidean" #euclidean, manhattan, ...
+link_mode="complete" #complete, single, average, ward...
+threshold=2.7 #taglio dendogramma per colorazione
+num_cluster=2
+
+#DENDOGRAM
+data_dist = pdist(X, metric=distanza)
+data_link = linkage(data_dist, method=link_mode, metric=distanza)
+res = dendrogram(data_link, color_threshold=threshold) #aggiungere truncate_mode='lastp' per troncare a foglie
+plt.show()
+
+hier = AgglomerativeClustering(affinity=distanza, linkage=link_mode, n_clusters=num_cluster) 
 hier = hier.fit(X)
 
 for i in range(0, len(nd.unique(hier.labels_))):
@@ -27,19 +38,5 @@ for i in range(0, len(nd.unique(hier.labels_))):
     rows = float(len(cluster.index))
     print ("------------------")
     print ("cluster", i)
-    print("element:", len(cluster))
-    print ("% credit default:", len(cluster[cluster.credit_default == 1].index)/rows)
-
-cf = select_cluster(df,0)
-X = cf.drop(['credit_default','education','status', 'sex', 'age'], axis=1)
-
-hier = AgglomerativeClustering(affinity='euclidean', linkage='complete', n_clusters=3) #funzione che fa clustering con label
-hier = hier.fit(X)
-
-for j in range(0, len(nd.unique(hier.labels_))):
-    cluster = select_cluster(cf, j)
-    rows = float(len(cluster.index))
-    print ("------------------")
-    print ("subcluster[0]", j)
     print("element:", len(cluster))
     print ("% credit default:", len(cluster[cluster.credit_default == 1].index)/rows)
