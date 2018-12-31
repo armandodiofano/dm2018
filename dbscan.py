@@ -29,7 +29,7 @@ X = scaler.fit_transform(X.values)
 dist = pdist(X, 'cityblock')
 dist = squareform(dist)
 
-dbscan = DBSCAN(eps = 0.30, min_samples = 350, metric='precomputed')
+dbscan = DBSCAN(eps = 0.20, min_samples = 55, metric='precomputed')
 dbscan.fit(dist)
 
 '''

@@ -17,7 +17,7 @@ X = scaler.fit_transform(X.values)
 dist = pdist(X, 'euclidean')
 dist = squareform(dist)
 
-k = 700
+k = 55
 
 kth_distances = list()
 for d in dist:

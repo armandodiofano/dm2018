@@ -89,7 +89,8 @@ la distribuzione dei cluster su un pagamento mensile (in questo
 caso si e' preso il pagamento del mese di agosto) ed abbiamo 
 notato che la distribuzione \`e rispettata per ogni terna di attributi
 validi costruibili sull'insieme dei mesi disponibili.
-In particolare il cluster dei \textit{ritardari} si posiziona sempre a valori molto elevati di \texttt{payment status}, mentre vale
+In particolare il cluster dei \textit{ritardari} si posiziona sempre
+a valori molto elevati di \texttt{payment status}, mentre vale
 esattamente il contrario per il cluster dei \textit{senza rischio}.
 Le tre
 dimensioni scelte per l'esempio sono \texttt{billing amount august},
@@ -198,12 +199,169 @@ e \texttt{billing amount} mostriamo i valori degli ultimi due mesi.
 
 Si noti come il gruppo dei ritardatari ha un limite imposto dalla banca molto pi\`u basso rispetto agli altri cluster. Segno che la banca ha valutato ottimamente i profili nella scelta di concessione del credito.
 
-\section{DBSCAN}
-\newpage
+\section{DBSCAN}L'algoritmo DBSCAN \`e stato eseguito su un dataset
+modificato rispetto alla esecuzione del KMeans.
+Questo \`e stato dovuto per permettere all'algoritmo
+di funzionare al meglio. Dopo molteplici esperimenti
+infatti i migliori risultati per DBSCAN sono stati ottenuti
+su un dataset composto dai soli attributi 
+\texttt{payment status} di ciascun mese. Ci\`o \`e in linea
+con la teoria in quanto DBSCAN ha problemi su dati con un 
+numero troppo elevato di dimensioni.
+Per stimare i parametri ottimali dell'algoritmo si sono
+utilizzati i grafici del k-dist$^2$, utilizzando la 
+distanza di Manhatthan. I valori che ci hanno permesso di
+ottenere un (primo) risultato soddisfacente sono stati
+$\varepsilon=0.30$ e $minPoints=350$.
+Il primo risultato \`e stato l'individuazione da parte
+di DBSCAN di due cluster di dimensioni molto diverse tra
+loro ma con un significato molto forte.
+
+\paragraph{Senza rischio}
+Composto da 8597 persone, formato da persone che non
+costituiscono alcun rischio in quanto i loro valori 
+di payment status sono costantemente sotto lo 0.
+
+\paragraph{Ritardatari}
+Composto da sole 454 unit\`a. Ci\`o che lo contraddistingue
+\`e un costante ritardo nei pagamenti dei propri debiti.
+Queste sono le persone che maggiormente rappresentano
+un rischio di perdita di credito per la banca.
+
+Data la notevole disparit\`a di dimensioni dei due cluster, 
+abbiamo deciso di eseguire nuovamente DBSCAN sul cluster
+dei senza rischio al fine di verificare se anch'esso avrebbe
+trovato la conformazione dei tre cluster individuati da KMeans.
+Abbiamo rieseguito l'algoritmo con gli stessi parametri e il
+risultato \`e stato l'individuazione di tre cluster con una 
+notevole quantit\`a di rumore. 
+
+\paragraph{Rifinanziatori}
+Cluster composto da 3271 persone. Sono contraddistinti da un uso 
+intensivo del revolving credit. Le spese sono di entit\`a media.
+Per questo motivo sospettiamo sia un merge tra i
+\textit{Grandi pagatori} e \textit{Piccoli pagatori} trovati
+da KMeans.
+
+\paragraph{Senza rischio}
+Cluster composto da 635 persone. Sono le persone che pagano
+sempre in orario, ogni mese rispettano la scadenza e
+ripagano in pieno il loro debito. Hanno caratteristiche
+molto simili all'omonimo di KMeans.
+
+\paragraph{No consumption}
+Cluster composto da 703 persone. Questa \`e la novit\`a 
+rispetto a KMeans. Questo cluster incorpora tutte le persone
+che non fanno uso del loro credito, evidenziato da un valore
+di \textit{No consumption} molto ripetuto.
+
+In conclusione, DBSCAN in qualche modo valida i risultati
+ottenuti da KMeans, in quanto due diversi algoritmi, su due
+selezioni diverse del dataset hanno trovato dei risultati
+molto simili, fatta eccezione per il cluster dei
+\textit{No consumption}.
+
+Di seguito riportiamo una tabella riassuntiva delle
+caratteristiche dei cluster trovati:
+
+\begin{center}
+	
+	\begin{tabular}{c|c|c|c|c|c|c}
+		\hline
+		\textbf{Cluster} & \textbf{ps-sep} 
+		& \textbf{ps-aug} & \textbf{pa-sep} 
+		& \textbf{pa-aug}\\
+		\hline
+		Senza rischio & 
+		$-1.0 (\pm 0.0)$ & 
+		$-1.0 (\pm 0.0)$ &
+		$6.8k (\pm 14.0k)$ &
+		$6.4k (\pm 12k)$\\
+		\hline
+		No consumption & 
+		$-2.0 (\pm 0.71)$ & 
+		$-2.0 (\pm 0.71)$ &
+		$4.8k (\pm 14k)$ &
+		$5k (\pm 14k)$\\
+		\hline
+		Rifinanziatori & 
+		$0.0 (\pm 0.0)$ & 
+		$0.0 (\pm 0.0)$ &
+		$6k (\pm 13k)$ &
+		$5.9k (\pm 16k)$\\
+		\hline
+		Ritardatari & 
+		$1.72 (\pm 0.68)$ & 
+		$2.10 (\pm 0.33)$ &
+		$2.5k (\pm 3.9k)$ &
+		$2.5k (\pm 4.3k)$\\
+		\hline
+		& 
+		\textbf{ba-sep} & 
+		\textbf{ba-aug} & 
+		\textbf{limit} & 
+		\textbf{age} &\\
+		\hline
+		Senza rischio & 
+		$6.3k (\pm 12k)$ &
+		$6.4k (\pm 12k)$ &
+		$221k (\pm 123k)$ &
+		$36 (\pm 8)$\\
+		\hline
+		No consumption &
+		$7k (\pm 23k)$ &
+		$6k (\pm 19k)$ &
+		$248k (\pm 122k)$ &
+		$36 (\pm 7)$\\
+		\hline
+		Rifinanziatori &
+		$93k (\pm 88k)$ &
+		$89k (\pm 85k)$ &
+		$161k (\pm 128k)$ &
+		$35 (\pm 9)$\\
+		\hline
+		Ritardatari &
+		$52k (\pm 56k)$ &
+		$53k (\pm 56k)$ &
+		$92k (\pm 68k)$ &
+		$35 (\pm 9)$\\
+		\hline
+		& 
+		\textbf{sex} & 
+		\textbf{status} & 
+		\textbf{education} & 
+		\textbf{default}\\
+		\hline
+		Senza rischio & 
+		F &
+		Single &
+		Graduate school&
+		14\%\\
+		\hline
+		No consumption & 
+		F &
+		Single &
+		Graduate School &
+		11\%\\
+		\hline
+		Rifinanziatori & 
+		F &
+		Single &
+		University&
+		9\%\\
+		\hline
+		Ritardatari & 
+		F &
+		Single &
+		University&
+		68\%\\
+		\hline
+	\end{tabular}
+\end{center}
 
 
 \section{Hierarchical Clustering}
-Per l'algoritmo di Hierarchical Clustering si è utilizzato un dataset privo delle varibili categoriche \texttt{education, status, sex} e della variabile \texttt{credit\_default}, poichè come più volte sottolineato, l'addestramento è di tipo non supervisionato. Inoltre dopo una serie di test si è deciso di eliminare anche la variabile \texttt{age}, senza la quale si sono raggiunti buoni risultati. Per parametri del clustering gerarchico si è scelta la \textbf{formula euclidea} per la distanza dato che l'utilizzo delle metriche \textit{supremum e manhattan} ha portato alla generazione di clusters di cardinalità troppo diverse. Per lo stesso motivo si è scelto come metodo aggregativo il \textbf{Metodo di Ward}, o della devianza minima, attraverso il quale si è raggiunto il miglior risultato in termini di ordine di grandezza delle dimensioni dei cluster. Gli altri metodi utilizzati $($single, complete, average$)$ non hanno portato a risultati accettabili.
+Per l'algoritmo di Hierarchical Clustering si \`e utilizzato un dataset privo delle varibili categoriche \texttt{education, status, sex} e della variabile \texttt{credit\_default}, poich\`e come pi\`u volte sottolineato, l'addestramento \`e di tipo non supervisionato. Inoltre dopo una serie di test si \`e deciso di eliminare anche la variabile \texttt{age}, senza la quale si sono raggiunti buoni risultati. Per parametri del clustering gerarchico si \`e scelta la \textbf{formula euclidea} per la distanza dato che l'utilizzo delle metriche \textit{supremum e manhattan} ha portato alla generazione di clusters di cardinalità troppo diverse. Per lo stesso motivo si \`e scelto come metodo aggregativo il \textbf{Metodo di Ward}, o della devianza minima, attraverso il quale si \`e raggiunto il miglior risultato in termini di ordine di grandezza delle dimensioni dei cluster. Gli altri metodi utilizzati $($single, complete, average$)$ non hanno portato a risultati accettabili.
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{img/complete.png}
 \caption{Esempio di dendrogrammi ricavati durante il test. I 3 casi in figura non sono stati considerati cluster accettabili.}
@@ -211,7 +369,7 @@ Per l'algoritmo di Hierarchical Clustering si è utilizzato un dataset privo del
 \end{figure} 
 \mbox{}\\
 \mbox{}\\
-Utilizzando la metrica euclidea e il metodo di Ward per il merging, si è deciso di settare la soglia a 15.2 ottenendo 4 cluster di dimensioni comparabili. In figura~\ref{euward} sono visualizzabili i clusters ottenuti mentre in figura ~\ref{euwardtrunc} è stato effettuato raggruppamento dei non singleton più profondi e sono stati aggiunti dei label per effettuare il troncamento a 15.2.
+Utilizzando la metrica euclidea e il metodo di Ward per il merging, si \`e deciso di settare la soglia a 15.2 ottenendo 4 cluster di dimensioni comparabili. In figura~\ref{euward} sono visualizzabili i clusters ottenuti mentre in figura ~\ref{euwardtrunc} \`e stato effettuato raggruppamento dei non singleton pi\`u profondi e sono stati aggiunti dei label per effettuare il troncamento a 15.2.
 \begin{figure}[!htb]
 \minipage{0.48\textwidth}
   \includegraphics[width=\linewidth]{img/euclidean-ward.png}
@@ -230,25 +388,14 @@ Utilizzando la metrica euclidea e il metodo di Ward per il merging, si è deciso
 \label{dendro-complete}
 \end{figure} 
 
-La Figura 2.7 descrive il metodo di Ward, metodo che cerca di minimizzare la varianza e generare cluster più coesi possibili. Nella formula $u$ è il cluster generato dai cluster $s$ e $t$, $v$ è un cluster inutilizzato e $T$ è la somma delle cardinalità dei cluster tale che $T = |v| + |s| + |t|$.
+La Figura 2.7 descrive il metodo di Ward, metodo che cerca di minimizzare la varianza e generare cluster pi\`u coesi possibili. Nella formula $u$ \`e il cluster generato dai cluster $s$ e $t$, $v$ \`e un cluster inutilizzato e $T$ \`e la somma delle cardinalità dei cluster tale che $T = |v| + |s| + |t|$.
 
-\newpage
-I cluster ottenuti sono indicati da un numero per non confoderli in un primo momento con i cluster precedendentemente ottenuti. Dopo averli analizzati, di seguito vengono descritte le principali caratteristiche:
-\paragraph{Cluster 1}
-Composto da 2050 titolari di carta. Pagano in modo puntuale le alte spese che effettuano ogni mese. Non registrano ritardi e sono solito fare utilizzo del revolving credit per la rateizzazione. Rientrano tra i clienti credibili per la banca
+I cluster trovati somigliano moltissimo agli stessi cluster trovati di KMeans.
+Anche in questo caso infatti, oltre ai cluster dei \textit{senza rischio} e
+dei \textit{ritardatari}, abbiamo una divisione sulla base dell'entit\`a delle spese
+mensili, formando quindi altri due cluster di \textit{piccoli e grandi pagatori}.
+Per la descrizione dei cluster rimandiamo alla descrizione dei cluster di KMeans.
 
-\paragraph{Cluster 2}
-Composto da 3353 titolari di carta. Compiono spese di bassa entità, pagandole in modo puntuale. Possono essere considerati i clienti meno a rischio per la banca.
-
-
-\paragraph{Cluster 3}
-Composto da 1530 persone. Registrano spese generalmente medio-alte con pagamenti generalmente bassi e registrando nella maggior parte dei casi ritardo nei pagamenti. Questo è il cluster che raggruppa i titolari di carta più a rischio con un alta percentuale di persone in credit\_default.
-
-
-\paragraph{Cluster 4}
-Composto da 3067 titolari di carta. Effettuano spese di media entità ma senza registrare ritardi nei pagamenti. Ogni mese pagano cifre discretamente basse, probabilmente ricorrendo all'utilizzo del revolving credit.
-\mbox{}\\
-\mbox{}\\
 \begin{center}
 \begin{tabular}{c|c|c|c|c|c|c}
 	\hline
@@ -287,9 +434,9 @@ Composto da 3067 titolari di carta. Effettuano spese di media entità ma senza r
 	\textbf{age} &\\
 	\hline
 	Cluster 1 & 
-	$8.7k (\pm 21k)$ &
-	$6.4k (\pm 16k)$ &
-	$215k (\pm 126k)$ &
+	$152k (\pm 97k)$ &
+	$145k (\pm 94k)$ &
+	$246k (\pm 126k)$ &
 	$36 (\pm 8)$\\
 	\hline
 	Cluster 2 &
@@ -342,4 +489,33 @@ Composto da 3067 titolari di carta. Effettuano spese di media entità ma senza r
 	\hline
 \end{tabular}
 \end{center}
+
+\section{Analisi del miglior clustering e precisazioni}
+Prima di passare alle analisi del miglior clustering ottenuto, teniamo
+a specificare che DBSCAN \'e stato eseguito su un dataset modificato
+ad hoc per il suo funzionamento. Questo stesso dataset, composto da soli
+\texttt{payment status} che a nostro avviso \'e l'attributo con pi\`u
+carico semantico a disposizione per la nostra analisi, \'e stato usato
+successivamente anche con KMeans e Hierarchical. Rieseguendo tutto, essi
+con un taglio a quattro cluster suddividevano in modo anomalo il cluster dei
+\textit{ritardatari} in base alla gravit\`a dei ritardi stessi.
+Con tre cluster entrambi suddividevano il dataset in \textit{senza rischio},
+\textit{ritardatari} e persone che utilizzavano intensivamente il revolving credit.
+Sebbene l'indice di \sil sia molto pi\`u alto, abbiamo preferito tenere per questi due
+il clustering sul dataset descritto precedentemente, poich\`e andava a suddividere in
+modo pi\`u specifico come il revolving credit veniva utilizzato, in modo da avere 
+pi\`u informazioni su chi poteva essere a rischio default. In ogni caso,
+la scelta dipende dalla granularit\`a a cui si vuole vedere il clustering.
+
+Detto ci\`o analizzando DBSCAN notiamo che sullo stesso dataset esso differisce
+dal fatto che riesce ad individuare un cluster dei \textit{no consumption}.
+
+In conclusione, non pensiamo ci sia un algoritmo che funziona decisamente meglio
+degli altri. Tutto dipende da che \textit{cosa} si vuole trovare. 
+Ad esempio, se vogliamo fare un'analisi per trovare il modo di
+fare spendere di pi\`u ai nostri utenti, allora prenderemo in considerazione
+DBSCAN poich\`e abbiamo un cluster di persone che non utilizzano la carta ben
+separato dagli altri, il che rende possibile uno studio pi\`u specifico su queste
+persone. Se invece si vuole semplicemente evidenziare i clienti pi\`u a rischio qualsiasi
+delle tecniche riesce a ben evidenziare il comportamento.
 

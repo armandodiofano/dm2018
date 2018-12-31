@@ -7,7 +7,7 @@ from sklearn.metrics import silhouette_score
 
 df = pandas.read_csv("credit_default_corrected_train.csv")
 
-X = df[df.credit_default == 1].drop(['credit_default','education','status','sex'], axis=1)
+X = df.drop(['credit_default','education','status','sex', 'age','limit', "pa-apr", "pa-may", "pa-jun", "pa-jul", "pa-aug", "pa-sep", "ba-apr", 'ba-may','ba-jun', "ba-jul", "ba-aug", "ba-sep"], axis=1)
 
 scaler = MinMaxScaler()
 X = scaler.fit_transform(X.values)

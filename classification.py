@@ -22,9 +22,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y,
                                                     random_state=100, 
                                                     stratify=y)
 
-clf = DecisionTreeClassifier(criterion='gini')
-
-clf = DecisionTreeClassifier(criterion='gini', min_samples_split=150, min_samples_leaf=20, presort=True)
+clf = DecisionTreeClassifier(criterion='gini', min_samples_split=150, min_samples_leaf=20, presort=True, max_depth=7)
 
 #clf = MLPClassifier(solver='lbfgs', alpha=1e-5,
 #                    hidden_layer_sizes=(10, 10), random_state=100)

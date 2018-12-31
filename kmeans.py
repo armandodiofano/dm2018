@@ -18,7 +18,7 @@ def substract_cluster(x, c):
     cluster_map['cluster'] = kmeans.labels_
     return x.iloc[cluster_map[cluster_map.cluster != c].index]
 
-number_of_clusters = 4;
+number_of_clusters = 3;
 color_labels = ['b', 'y', 'r', 'g']
 label_names= ['Senza rischio', 'Piccoli pagatori', 'Ritardatari', 'Grandi pagatori']
 df = pandas.read_csv("credit_default_corrected_train.csv")
@@ -27,7 +27,7 @@ statuses = df[['ps-sep', 'ps-aug', 'ps-jul', 'ps-jun', 'ps-may', 'ps-apr']]
 payments = df[['pa-sep', 'pa-aug', 'pa-jul', 'pa-jun', 'pa-may', 'pa-apr']]
 billings = df[['ba-sep', 'ba-aug', 'ba-jul', 'ba-jun', 'ba-may', 'ba-apr']]
 
-kmeans_df = df.drop(['credit_default','education','status','sex', 'limit'], axis=1)
+kmeans_df = df.drop(['credit_default','education','status','sex', 'age','limit', "pa-apr", "pa-may", "pa-jun", "pa-jul", "pa-aug", "pa-sep", "ba-apr", 'ba-may','ba-jun', "ba-jul", "ba-aug", "ba-sep"], axis=1)
 
 scaler = MinMaxScaler()
 kmeans_df = scaler.fit_transform(kmeans_df.values)
