@@ -1,0 +1,265 @@
+\chapter{Pattern Mining}
+In questo capitolo analizzeremo la fase di Pattern Mining.
+Un punto importante di questa fase \`e che utilizzeremo un dataset che,
+differentemente dalle altre fasi, sar\`a privo di outlier. Ci\`o \`e
+stato fatto principalmente per due motivi, il primo \`e che gli outlier
+sono per definizione valori anomali, quindi ripetuti poche volte, di
+conseguenza sarebbero stati inutili nella generazione degli itemset e delle
+successive regole. Il secondo motivo, pi\`u importante, \`e che data la necessaria
+discretizzazione di alcuni attributi (i.e, \texttt{billing amount}), la presenza
+di essi produceva degli intervalli che rendevano pi\`u difficoltoso il pattern
+mining.
+La discretizzazione degli attributi \`e stata implementata con Sturges.
+Per quanto riguarda gli attributi \texttt{payment status}, \`e stato
+invece applicata una discretizzazione con bins asimmetrici.
+In particolare per i valori -2, -1, e 0 si sono tenuti i singoli valori, mentre
+si \`e creato un intervallo [1,9] per i restanti per mettere particolare enfasi
+sulla presenza o meno di un ritardo nel pagamento, mettendo in secondo piano la
+gravit\`a del ritardo stesso.
+
+\section{Estrazione degli item pi\`u significativi}
+La prima estrazione di itemset \`e stata effettuata con un supporto del 30\%.
+Si sono estratti circa 2200 item di cui tutti completi e circa 490 massimali.
+La prima cosa che si \`e notato \`e che tutte le regole erano accorpabili e
+riconducibili a pochi insiemi che descriviamo:
+
+\paragraph{Gruppo 1}
+Il primo gruppo evidenzia una tendenza nel dataset a mantenere pi\`u o meno
+costante il trend di spesa durante tutti i mesi.
+Esempio:
+\begin{center}
+	(('ba-jun [-15910.0, 6717.7)', 'ba-jul [-15910.0, 7900.0)', 'ba-may [-7529.9, 15421.2)', 'ba-apr [-7616.5, 17105.2)'))
+\end{center}
+
+\paragraph{Gruppo 2}
+Questo gruppo di regole evidenzia le persone che utilizzano il revolving credit e
+che infine non vanno in credit default. Ha una somiglianza molto forte con
+i cluster trovati.
+
+\begin{center}
+	(('ps-sep 0', 'ps-jul 0', 'ps-aug 0', 'ps-jun 0', 'ps-may 0', 'default 0'))
+\end{center}
+
+Inoltre si \`e provato ad abbassare il support al 10\%, sono risultati circa
+12000 itemset, di cui 11000 completi e 9000 massimali. Si sono trovati
+anche qui gruppi interessanti:
+
+\paragraph{Gruppo 3}
+Percentuale di persone che smette di usare la carta ma continua a pagare i propri
+debiti accumulati in precedenza, riuscendo a non finire in default.
+
+\begin{center}
+	(('ps-jun -2', 'ps-jul -2','default 0', 'pa-jul [0.0, 4636.4)', 'pa-jun [0.0, 4371.8)'))
+\end{center}
+
+\paragraph{Gruppo 4}
+Percentuale di persone che hanno un limite molto alto e non vanno in credit default.
+Questo pu\`o essere un segnale di come la valutazione del merito creditizio
+sia buona nella banca.
+
+\begin{center}
+	(('limit [157272.7, 206363.6)', 'default 0'))
+\end{center}
+
+\paragraph{Gruppo 5}
+Percentuale di persone che pagano puntualmente e come da previsioni non finiscono
+in credit default.
+
+\begin{center}
+	(('ps-sep [-1, 0)', 'ps-jul [-1, 0)', 'ps-aug [-1, 0)', 'default 0'))
+\end{center}
+
+\paragraph{Gruppo 6}
+Persone che non utilizzano il credito.
+
+\begin{center}
+	(('ps-aug -2', 'ps-jul -2', 'ps-jun -2', 'ps-may -2'))
+\end{center}
+
+Infine, data la percentuale molto sbilanciata di distribuzione di casi di default
+nel dataset si \`e deciso di eseguire \textit{apriori} su un dataset composto
+da soli casi di default. Con un supporto del 30\% si sono ottenuti 25 itemset,
+di cui 16 completi e 6 massimali.
+
+
+\paragraph{Gruppo 7}
+Persone che utilizzano il revolving credit ma non riescono a pagare, finendo
+in default.
+
+\begin{center}
+	(('ps-aug 0', 'ps-sep 0', 'ps-jun 0' 'default 1'))
+\end{center}
+
+Mentre con una percentuale del 10\% si ottengono 300 item, di cui circa 200 completi
+e solo 15 massimali, tutti riconducibili ad un unico gruppo.
+
+\paragraph{Gruppo 8}
+Persone che pagano sempre in ritardo ed ovviamente finiscono col finire in credit
+default.
+
+\begin{center}
+	(('ps-apr [1, 10)', 'ps-may [1, 10)', 'ps-jun [1, 10)', 'ps-jul [1, 10)', 'ps-aug [1, 10)', 'ps-sep [1, 10)', 'default 1'), 312)
+\end{center}
+
+\section{Estrazione delle association rules pi\`u significative}
+La prima estrazione delle association rules \`e stato effettuata con una percentuale
+di supporto del 30\% e di confindenza del 90\%. Questa estrazione ha portato
+soli due gruppi di regole:
+
+\paragraph{Gruppo 1}
+\begin{center}
+	$baX \in [a,b] \rightarrow ba(X \in \{apr,may,jun,jul,aug,sep\}) \in [c*a, c*b]$
+\end{center}
+
+Essa afferma che se il billing amount di un mese risulta entro un certo intervallo
+di spesa, allora il billing amount di tutti gli altri mesi risultera pi\`u o 
+meno entro lo stesso intervallo o comunque non troppo distante. Questa regola
+afferma chiaramente che c'\`e una tendenza a mantenere costante il proprio stile
+di vita. Questa regola ha un lift di circa 2.
+
+\paragraph{Gruppo 2}
+\begin{center}
+	$psX =0 \rightarrow ps(X \pm 1) = 0$
+\end{center}
+
+Ovvero che l'uso del revolving credit per un mese implica il suo uso anche nei mesi
+immediatamente precendenti e successivi. Questo indica che le difficolt\`a di un
+mese si ripercuotono anche successivamente (o sono stati indotte precedentemente).
+Il lift di questa regola \`e la pi\`u bassa registrata, circa 1.60.
+
+Abbassando il supporto fino al 5\% e con una confidenza del 60\% si trova un
+insieme di regole (\textbf{Gruppo 3}) che descrive un tipo di comportamento prudente
+tenuto da una parte del dataset. Dopo una serie di mesi di spesa, non si utilizza
+pi\`u il credito per poter pagare con meno rischi, il debito accumulato
+precedentemente, rientrano dal rischio e non registrando credit default.
+Un'istanza di questa regola \`e riportata successivamente assieme alle misure di
+supporto, confidenza e lift.
+
+\begin{center}
+	('ps-sep -2', ('ps-aug -2', 'ba-jun [-15910.0, 6717.7)', 'ba-jul [-15910.0, 7900.0)', 'ba-may [-7529.9, 15421.2)', 'ba-aug [-9557.5, 20552.2)', 'default 0'), count=631, supp=0.07, conf=0.70, lift=5.43)
+\end{center}
+
+Data la necessit\`a di costruire un classificatore rule based, abbiamo deciso
+di estrarre le regole su un dataset solamente composto dagli attributi
+\texttt{payment status}, per estrarre con pi\`u facilit\`a le regole che legavano
+essi al caso di default. Tenendo il supporto al 5\% e una confidenza del 70\% si
+sono estratte le seguenti regole.
+Le prime regole estratte descrivevano dei comportamenti molto simili alla regola
+sui \texttt{billing amount}, ovvero:
+
+\begin{center}
+	$psX \geq 1 \rightarrow psY, psZ \geq 1$ con $lift \geq 5.9$
+	
+	$psX = -1 \rightarrow psY, psZ = -1$ con $lift \geq 4.5$
+\end{center}
+
+Ovvero si registra anche sugli status una tendenza nel mantenere il proprio
+comportamento. Si sono inoltre estratte delle regole utili per predirre
+la classe \textit{no default} con un lift abbastanza alto. Tutte le regole
+estratte si possono riassumere in due schemi di regole.
+
+\begin{center}
+	$psX, psY = -1 \rightarrow default=0$ con $lift \geq 4.2$
+	
+	$psX, psY, psZ = -1 \rightarrow default=0$ con $lift \geq 3.9$
+\end{center}
+
+Ovvero il pagamento in orario per un numero di mesi maggiore o uguale a due
+implica un caso di non default nel dataset. Si noti che psX non significa
+che la regola valga per qualsiasi valore di X ma solo per un suo sottoinsieme.
+In altre parole le regole non valgono per qualsiasi tuple di mesi in quanto
+esistono dei mesi per i quali sembra che il pagamento in orario e in pieno
+sia considerato pi\`u che per altri. Si \`e inoltre ripetuta l'estrazione
+delle regole sul solo dataset di credit default e si \`e verificata l'esistenza
+di regole simmetriche seppur con valore di lift pi\`u basso.
+
+\begin{center}
+	$psX, psY, psZ \geq 1 \rightarrow default=1$ con $lift \geq 2.7$
+	
+	$psX, psY, psZ, psH \geq 1 \rightarrow default=1$ con $lift \geq 2.4$
+\end{center}
+
+\section{Rule based classifier}
+Avendo solo due valori nella classe target \`e possibile utilizzare solo uno dei
+due set di regole. La scelta \`e ricaduta sul set di regole per la classe 
+\textit{no default} in quanto i valori di lift sono pi\`u alti.
+Abbiamo quindi costruito un classificatore con le istanze trovate dello schema di
+regole descritto precedentemente. I clienti aderenti alle regole sono classificati
+come non default, il restante come default. Di seguito riportiamo i risultati:
+
+\begin{center}
+	\begin{tabular}{c|c|c}
+		\hline
+		\textbf{Misure} & \textbf{Performance}\\
+		\hline
+		Accuracy & 0.79\\
+		\hline
+		Precision & 0.68\\
+		\hline
+		Recall & 0.16\\
+		\hline
+		F1 & 0.26\\
+		\hline
+	\end{tabular}
+\end{center}
+
+Notiamo come i risultanti non siano soddisfacenti, specialmente per quanto riguarda
+la recall che, per quanto spiegato nel capitolo 3, \`e la misura che consideriamo
+pi\`u importante di tutte. Anche per quanto riguarda la accuracy comunque, si tenga
+conto che il classificatore banale che risponde sempre \textit{no default} avrebbe
+una accuracy dell'82\%, per tanto non pu\`o essere tenuto come dato positivo.
+Ai fini di un'analisi pi\`u accurata abbiamo anche rieseguito l'estrazione
+delle association rules suddividendo il dataset in training e test set.
+L'estrazione delle regole (eseguita solo sul training set) ha portato a risultati
+molto simili ai precedenti, per questo abbiamo riscontrato risultati molto simili.
+
+\begin{center}
+	\begin{tabular}{c|c|c}
+		\hline
+		\textbf{Misure} & \textbf{Train} & \textbf{Test}\\
+		\hline
+		Accuracy & 0.79 & 0.78\\
+		\hline
+		Precision & 0.64 & 0.63\\
+		\hline
+		Recall & 0.19 & 0.19\\
+		\hline
+		F1 & 0.34 & 0.33\\
+		\hline
+	\end{tabular}
+\end{center}
+
+Per quanto riguarda i classificatori per i missing values, abbiamo implementato
+un classificatore per l'attributo \texttt{sex}. Abbiamo rieseguto l'estrazione
+delle association rules sul dataset. Le regole con valore di lift pi\`u
+alte sono stati ottenute con un supporto del 5\% e una confidenza del 50\%.
+Non avendo ottenuto regole in cui le istanze di \texttt{sex} occorrevano
+da sole come secondo termine dell'implicazione, abbiamo analizzato solo le
+precondizioni delle regole per le quali una delle due istanze di \texttt{sex}
+rientrava (insieme ad altri) a destra dell'implicazione.
+Le precondizioni ottenute sono state:
+
+\begin{itemize}
+	\item \texttt{ps-sep} $\in [0]$
+	\item \texttt{ps-aug} $\in [-2, -1]$
+	\item \texttt{ps-jul} $\in [-2, -1]$
+	\item \texttt{ba-jun} $\in [-15k, 6.7k]$
+	\item \texttt{ba-sep} $\in [-9.8k, 15.8k]$
+	\item \texttt{ps-jun} $\in [-2]$
+	\item \texttt{ba-may} $\in [15k, 38k]$
+	\item \texttt{ba-jul} $\in [-15k, 7.9k]$
+	\item \texttt{ba-may} $\in [15k, 38k]$
+	\item \texttt{ps-apr} $\in [-2, -1]$
+	\item \texttt{ps-may} $\in [-1]$
+	\item \texttt{ba-apr} $\in [17k, 41k]$
+\end{itemize}
+
+Per questo classificatore \`e stata valutata solo l'accuracy che si \`e dimostrata
+abbastanza scarsa (intorno al 58\%).
+L'unico classificatore per i missing values sensato costruibile
+su questo dataset \`e questo poich\`e \`e un attributo categorico che presenta solo
+due valori. Per altri attributi che presentano missing values, \texttt{status},
+\texttt{education}, \texttt{age}, per la loro conformazione multi classe, per alti
+volare di supporto e confidenza non sono state trovare sufficienti regole, mentre
+per abbassando i valori dei parametri si trovavano molte regole ambigue. Per tanto
+costruire un classificatore su queste basi non \`e stato possibile.

@@ -1,0 +1,30 @@
+(('ps-aug [-2, -1)', 'default 1'), 208)
+
+(('ps-jul [-2, -1)', 'default 1'), 221)
+
+(('ps-jun [-2, -1)', 'ps-may [-2, -1)', 'ps-apr [-2, -1)', 'default 1'), 211)
+
+(('ps-may [-1, 0)', 'default 1'), 280)
+
+(('ps-aug [-1, 0)', 'ps-jul [-1, 0)', 'default 1'), 212)
+
+(('ps-jun [-1, 0)', 'ps-jul [-1, 0)', 'default 1'), 215)
+
+(('ps-sep [-1, 0)', 'default 1'), 296)
+
+(('ps-apr [-1, 0)', 'default 1'), 309)
+
+(('ps-apr [1, 10)', 'ps-may [1, 10)', 'ps-jun [1, 10)', 'ps-jul [1, 10)', 'ps-aug [1, 10)', 'ps-sep [1, 10)', 'default 1'), 312)
+
+(('ps-sep [0, 1)', 'ps-aug [0, 1)', 'ps-jul [0, 1)', 'ps-jun [0, 1)', 'ps-apr [0, 1)', 'ps-may [0, 1)', 'default 1'), 289)
+
+(('ps-jul [1, 10)', 'ps-apr [0, 1)', 'default 1'), 262)
+
+(('ps-jul [1, 10)', 'ps-may [0, 1)', 'default 1'), 253)
+
+(('ps-aug [1, 10)', 'ps-jun [0, 1)', 'ps-may [0, 1)', 'ps-sep [1, 10)', 'default 1'), 232)
+
+(('ps-aug [1, 10)', 'ps-apr [0, 1)', 'ps-may [0, 1)', 'ps-sep [1, 10)', 'default 1'), 248)
+
+(('ps-jul [0, 1)', 'ps-jun [0, 1)', 'ps-apr [0, 1)', 'ps-may [0, 1)', 'ps-sep [1, 10)', 'default 1'), 212)
+
