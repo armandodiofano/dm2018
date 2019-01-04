@@ -1,13 +1,9 @@
 \chapter{Data Understanding}
 
-\textit{Credit Card Default} \`e il dataset utilizzato
-per questa analisi che si pone l'obiettivo di classificare
-ed identificare i clienti di una banca di Taiwan in base
-ai loro default payments o pagamenti in stato di insolvenza,
-relativi alla carta di credito personale. Dal punto di vista
-della gestione del rischio, il risultato della classificazione
-sar\`a prezioso per identificare clienti credibili o non credibili.
-Il periodo a cui si riferiscono i dati in possesso va da Aprile
+\textit{Credit Card Default} \`e un dataset la cui analisi si pone l\' obiettivo
+di individuare i clienti a rischio di default, attraverso lo studio di quelli che sono i
+movimenti in entrata ed uscita delle loro carte di credito.
+Il periodo, a cui si riferiscono i dati in possesso, va da Aprile
 a Settembre 2005 e la valuta di riferimento \`e il dollaro
 taiwanese (NT\$). Il datasetet contiene 10.000 records descritti
 da 24 colonne di attributi.
@@ -91,9 +87,9 @@ questi valori utili per le successive fasi di analisi sul
 dataset. Lo stesso ragionamento vale per gli attributi 
 \texttt{ps-\textit{X}}. Per quanto riguarda l'attributo
 \texttt{age} invece, abbiamo considerato non utile escludere i record
-per il fatto della loro bassa correlazione con qualsiasi altro attributo
+per la loro bassa correlazione con qualsiasi altro attributo
 del dataset. L'utilizzo dei boxplot ha sollevato una problematica
-pi\`u facilmente osservabile del dataset, ovvero la presenza
+pi\`u facilmente osservabile da questi che non dal dataset, ovvero la presenza
 dei Missing Values:
 
 \subparagraph{attributi numerici}
@@ -105,7 +101,7 @@ dei Missing Values:
 \caption{Boxplot del'attributo age}
 \end{wrapfigure}
 
-Un attributo numerico che presenta missing value \`e l'attributo \texttt{age}, infatti all'interno del dataset sono presenti per tale attributo molteplici valori -1, valore non coerente con un attributo che indichi l'et\`a anagrafica. \`E facilmente intuibili come tale valore indichi un valore mancante. Pertanto, tale valore \`e stato sostituito con la media dell'et\`a anagrafica dei record del dataset, ovviamente non tenendo conto dei valori -1. La media corrisponde a 35.4 che (per coerenza con il tipo di dato intero dell'et\`a) \`e stata troncata a 35 e settata in sostituzione del valore -1.\\\\
+Un attributo numerico che presenta missing value \`e l'attributo \texttt{age}, infatti all'interno del dataset sono presenti per tale attributo molteplici valori -1, valore non coerente con un attributo che indichi l'et\`a anagrafica. \`E facilmente intuibile come tale valore indichi un valore mancante. Pertanto, tale valore \`e stato sostituito con la media dell'et\`a anagrafica dei record del dataset, ovviamente non tenendo conto dei valori -1. La media corrisponde a 35.4 che (per coerenza con il tipo di dato intero dell'et\`a) \`e stata troncata a 35 e settata in sostituzione del valore -1.\\\\
 \subparagraph{attributi categorici}: ad eccezione di \texttt{credit\_default}, in ciascuno degli altri attributi categorici sono presenti missing values (nan), sostituiti dalla moda dell'attributo:
 \begin{itemize}
 \item \textbf{\texttt{sex}}: moda "female"
@@ -137,7 +133,7 @@ Per la visualizzazione della distribuzione di attributi numerici sono stati util
 \endminipage
 \end{figure}
 
-Attraverso l'istogramma dell'attributo \texttt{limit} ( Figura~\ref{limit-dist}) \`e possibile vedere come vi sia una distribuzione inversamente proporzionale alla somma di denaro che la banca mette a disposizione del titolare di carta di credito. Un comportamento dei dati che rispecchia la realt\`a, evidenziando come le persone pi\`u facoltose e con limiti di carta di credito pi\`u alte siano anche le meno numerose. L'attributo \texttt{age} segue una distribuzione normale, infatti si pu\`o notare in Figura~\ref{age-dist} come il picco dell'istogramma coincida con la curva distribuzione, esattamente sul valore 35.
+Attraverso l'istogramma dell'attributo \texttt{limit} ( Figura~\ref{limit-dist}) \`e possibile vedere come il numero di clienti aventi quel determinato limite sia inversamente proporzionale al limmite stesso concesso dalla banca. Un comportamento dei dati che rispecchia la realt\`a, evidenziando come le persone pi\`u facoltose e con limiti di carta di credito pi\`u alte siano anche meno numerose. L'attributo \texttt{age} segue una distribuzione normale, infatti si pu\`o notare in Figura~\ref{age-dist} come il picco dell'istogramma coincida con la curva distribuzione, esattamente sul valore 35.
 
 \begin{figure}[!htb]
 \minipage{0.62\textwidth}
@@ -165,7 +161,7 @@ Attraverso l'istogramma dell'attributo \texttt{limit} ( Figura~\ref{limit-dist})
 \endminipage\hfill
 \end{figure}
 \mbox{}\\
-Per i gli attributi relativi al \texttt{bill amount} e al \texttt{payment amount} \`e possibile osservare picchi elevati per valori bassi. E' osservabile come il valore pi\`u ricorrente in entrambi i casi sia 0, ovvero che la maggior parte dei titolari di carta ogni mese non abbiano da pagare nessuna somma di denaro. Si pu\`o come nonostante siano presenti valori medi di \texttt{billing amount} piuttosto alti, per ogni mese il payment amount ha un valore medio di circa 5000. Osservando gli istogrammi in figura 1.10 e la Tabella 1.5 relativi ai payment status, si pu\`o giustificare la differenza di valori medi degli attributi \texttt{billing amount} e \texttt{payment amount} da un alto numero di titolari di carta che ricorrono al metodo di pagamento \textbf{revolving credit}, rappresentato dal valore 0 degli attributi \texttt{payment status}, valore pi\`u ricorrente.
+Per gli attributi \texttt{bill amount} e \texttt{payment amount} \`e possibile osservare come il numero di records aventi valori bassi sia molto alto. E' osservabile come il valore pi\`u ricorrente in entrambi i casi sia 0, ovvero che la maggior parte dei titolari di carta ogni mese non abbiano da pagare nessuna somma di denaro. Si pu\`o osservare come, nonostante siano presenti valori medi di \texttt{billing amount} piuttosto alti, per ogni mese il payment amount ha un valore medio di circa 5000. Osservando gli istogrammi in figura 1.10 e la Tabella 1.5 relativi ai payment status, si pu\`o giustificare la differenza di valori medi degli attributi \texttt{billing amount} e \texttt{payment amount} da un alto numero di titolari di carta che ricorrono al metodo di pagamento \textbf{revolving credit}, rappresentato dal valore 0 degli attributi \texttt{payment status}, valore pi\`u ricorrente.
 Inoltre \`e da sottolineare come gli attributi \texttt{payment status} seguano a grandi linee una distribuzione normale, con picco sul valore 0.
 \begin{figure}[!htb]
 \minipage{0.62\textwidth}
@@ -213,7 +209,7 @@ preferito l'utilizzo di grafici a torta.
 L'analisi della correlazione \`e stata fatta escludendo
 gli attributi categorici e binari. Con riferimento alla 
 heatmap in figura ~\ref{heatmap}, le correlazioni significative
-sono senza dubbio quelle che occorrono tra i vari \texttt{payment status}
+sono, senza dubbio, quelle che occorrono tra i vari \texttt{payment status}
 e \texttt{billing amount} di ogni mese, con tendenza decrescente per mesi
 temporalmente pi\`u lontani. I valori alti di correlazione indicano una
 tendenza nel mantenere il proprio comportamento nel tempo, sia esso positivo
