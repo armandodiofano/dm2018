@@ -14,21 +14,21 @@ gli addestramenti di tipo non supervisionato.
 \section{KMeans}
 
 Il miglior parametro \textit{k} con cui eseguire 
-KMeans \`e stato stimato calcolando la 
-\textit{SSE} variando \textit{k} su un range da 
+KMeans \`e stato ottenuto calcolando la 
+\textit{SSE} in funzione di un \textit{k} che variava  in un range da 
 2 a 20, con metrica di distanza euclidea. 
 In figura~\ref{fig:best_k} sono riportati 
 i risultati ottenuti. Si nota che il cambio di
-pendenza della curva si trova quando \textit{k}
+pendenza della curva, altresì detto gomito della curva, si trova quando \textit{k}
 vale 7. A partire da ci\`o abbiamo eseguito l'algoritmo
-per $k\in[3,10]$, reiterando per ogni passo 50 volte
-KMeans per evitare che la scelta casuale dei centroidi
-influenzasse i risultati e calcolando in questo caso
+per $k\in[3,10]$ reiterando per ogni passo 50 volte
+KMeans, per evitare che la scelta casuale dei centroidi
+influenzasse i risultati e calcolando, in questo caso,
 anche l'indice di Silhouette per i cluster trovati.
 In seguito a queste analisi abbiamo constatato come
-i cluster ottenuti per $k=4$ siano i pi\`u significativi,
+i cluster ottenuti per $k=4$ siano i pi\`u significativi e
 la nostra considerazione \`e stata rafforzata dal fatto
-che il clustering ottenuto per $k=4$ presenta il valore
+che il clustering ottenuto per $k=4$ presenti il valore
 dell'indice di \sil pi\`u alto trovato.
 
 \begin{figure}[H]
@@ -45,28 +45,27 @@ di ogni cluster.
 \paragraph{Senza rischio}
 Cluster costituito da 3032 persone. Pagano in modo puntuale
 le loro spese ogni mese senza registrare ritardi e compiono 
-solitamente spese di bassa entit\`a. Non costituiscono alcuna
-minaccia per la banca.
+solitamente spese di basso importo. Non presentano alcun rischio di default.
 
 \paragraph{Piccoli pagatori}
 Gruppo di 4832 persone. Sono soliti fare un uso abbastanza 
 intensivo del revolving credit per pagare le loro spese. 
-Anch'essi registrano spese di bassa entit\`a e non commettono
+Anch'essi registrano spese di basso importo e non commettono
 gravi ritardi nel pagamento, per questo motivo rientrano tra
-clienti credibili per la banca.
+clienti affidabili per la banca.
 
 \paragraph{Grandi pagatori}
 Cluster di 1083 persone. Come per i \textit{piccoli pagatori}, 
 anch'essi sono soliti usare la modalit\`a di pagamento 
 rateizzata anche se le loro spese sono generalmente molto elevate.
 Non si registrano comunque grossi ritardi ed \'e per questo che
-rientrano comunque tra il gruppo di clienti credibili.
+rientrano comunque tra il gruppo di clienti affidabili.
 
 \paragraph{Ritardatari}
 Gruppo formato da 1053 persone. Registrano spese di media entit\`a
-ma al contrario degli altri tre gruppi si verificano gravi ritardi
+ma, al contrario degli altri tre gruppi, presentano gravi ritardi
 nei pagamenti. Sono il cluster di persone che, infine, finisce in
-credit default e non sono clienti credibili per la banca.
+credit default e non sono clienti ottimali per la banca.
 
 In figura~\ref{fig:centers} si sono plottate una selezione
 delle coordinate dei centroidi, mostrando chiaramente dove i quattro
@@ -84,7 +83,7 @@ cluster trovati differiscono maggiormente.
 \label{fig:kmeans}
 \end{figure} 
 
-Infine si \`e plottato su un un grafico 3D (figura~\ref{fig:kmeans}
+Infine si \`e plottato su un un grafico 3D (figura~\ref{fig:kmeans})
 la distribuzione dei cluster su un pagamento mensile (in questo 
 caso si e' preso il pagamento del mese di agosto) ed abbiamo 
 notato che la distribuzione \`e rispettata per ogni terna di attributi
@@ -201,9 +200,9 @@ Si noti come il gruppo dei ritardatari ha un limite imposto dalla banca molto pi
 
 \section{DBSCAN}L'algoritmo DBSCAN \`e stato eseguito su un dataset
 modificato rispetto alla esecuzione del KMeans.
-Questo \`e stato dovuto per permettere all'algoritmo
-di funzionare al meglio. Dopo molteplici esperimenti
-infatti i migliori risultati per DBSCAN sono stati ottenuti
+Questo \`e stato fatto per permettere all'algoritmo
+di funzionare al meglio. Dopo molteplici tentativi,
+infatti, i migliori risultati per DBSCAN sono stati ottenuti
 su un dataset composto dai soli attributi 
 \texttt{payment status} di ciascun mese. Ci\`o \`e in linea
 con la teoria in quanto DBSCAN ha problemi su dati con un 
@@ -214,8 +213,8 @@ distanza di Manhatthan. I valori che ci hanno permesso di
 ottenere un (primo) risultato soddisfacente sono stati
 $\varepsilon=0.30$ e $minPoints=350$.
 Il primo risultato \`e stato l'individuazione da parte
-di DBSCAN di due cluster di dimensioni molto diverse tra
-loro ma con un significato molto forte.
+di DBSCAN di cluster di dimensioni molto diverse tra loro
+ma con un significato molto forte.
 
 \paragraph{Senza rischio}
 Composto da 8597 persone, formato da persone che non
@@ -361,7 +360,7 @@ caratteristiche dei cluster trovati:
 
 
 \section{Hierarchical Clustering}
-Per l'algoritmo di Hierarchical Clustering si \`e utilizzato un dataset privo delle varibili categoriche \texttt{education, status, sex} e della variabile \texttt{credit\_default}, poich\`e come pi\`u volte sottolineato, l'addestramento \`e di tipo non supervisionato. Inoltre dopo una serie di test si \`e deciso di eliminare anche la variabile \texttt{age}, senza la quale si sono raggiunti buoni risultati. Per parametri del clustering gerarchico si \`e scelta la \textbf{formula euclidea} per la distanza dato che l'utilizzo delle metriche \textit{supremum e manhattan} ha portato alla generazione di clusters di cardinalità troppo diverse. Per lo stesso motivo si \`e scelto come metodo aggregativo il \textbf{Metodo di Ward}, o della devianza minima, attraverso il quale si \`e raggiunto il miglior risultato in termini di ordine di grandezza delle dimensioni dei cluster. Gli altri metodi utilizzati $($single, complete, average$)$ non hanno portato a risultati accettabili.
+Per l'algoritmo di Hierarchical Clustering si \`e utilizzato un dataset privo delle varibili categoriche \texttt{education, status, sex} e della variabile \texttt{credit\_default} poich\`e, come pi\`u volte sottolineato, l'addestramento \`e di tipo non supervisionato. Inoltre, dopo una serie di test, si \`e deciso di eliminare anche la variabile \texttt{age}, senza la quale si sono raggiunti buoni risultati. Come parametri del clustering gerarchico, si \`e scelta la \textbf{formula euclidea} per la distanza dato che l'utilizzo delle metriche \textit{supremum e manhattan} ha portato alla generazione di clusters di cardinalit\`a roppo diverse. Per lo stesso motivo si \`e scelto come metodo aggregativo il \textbf{Metodo di Ward}, o della devianza minima, attraverso il quale si \`e raggiunto il miglior risultato in termini di ordine di grandezza delle dimensioni dei cluster. Gli altri metodi utilizzati $($single, complete, average$)$ non hanno portato a risultati accettabili.
 \begin{figure}[H]
 \includegraphics[width=\linewidth]{img/complete.png}
 \caption{Esempio di dendrogrammi ricavati durante il test. I 3 casi in figura non sono stati considerati cluster accettabili.}
@@ -388,9 +387,9 @@ Utilizzando la metrica euclidea e il metodo di Ward per il merging, si \`e decis
 \label{dendro-complete}
 \end{figure} 
 
-La Figura 2.7 descrive il metodo di Ward, metodo che cerca di minimizzare la varianza e generare cluster pi\`u coesi possibili. Nella formula $u$ \`e il cluster generato dai cluster $s$ e $t$, $v$ \`e un cluster inutilizzato e $T$ \`e la somma delle cardinalità dei cluster tale che $T = |v| + |s| + |t|$.
+La Figura 2.7 descrive il metodo di Ward, metodo che cerca di minimizzare la varianza e generare cluster il pi\`u coesi possibili. Nella formula, $u$ \`e il cluster generato dai cluster $s$ e $t$, $v$ \`e un cluster inutilizzato e $T$ \`e la somma delle cardinalità dei cluster $T = |v| + |s| + |t|$.
 
-I cluster trovati somigliano moltissimo agli stessi cluster trovati di KMeans.
+I cluster trovati somigliano moltissimo agli stessi cluster trovati con l'utilizzo del Kmeans.
 Anche in questo caso infatti, oltre ai cluster dei \textit{senza rischio} e
 dei \textit{ritardatari}, abbiamo una divisione sulla base dell'entit\`a delle spese
 mensili, formando quindi altri due cluster di \textit{piccoli e grandi pagatori}.
@@ -494,21 +493,21 @@ Per la descrizione dei cluster rimandiamo alla descrizione dei cluster di KMeans
 Prima di passare alle analisi del miglior clustering ottenuto, teniamo
 a specificare che DBSCAN \'e stato eseguito su un dataset modificato
 ad hoc per il suo funzionamento. Questo stesso dataset, composto da soli
-\texttt{payment status} che a nostro avviso \'e l'attributo con pi\`u
+\texttt{payment status} che, a nostro avviso, \'e l'attributo con pi\`u
 carico semantico a disposizione per la nostra analisi, \'e stato usato
-successivamente anche con KMeans e Hierarchical. Rieseguendo tutto, essi
-con un taglio a quattro cluster suddividevano in modo anomalo il cluster dei
+successivamente anche con KMeans e Hierarchical. Rieseguendo tutto, 
+con un taglio a quattro cluster,questi suddividevano in modo anomalo il cluster dei
 \textit{ritardatari} in base alla gravit\`a dei ritardi stessi.
 Con tre cluster entrambi suddividevano il dataset in \textit{senza rischio},
 \textit{ritardatari} e persone che utilizzavano intensivamente il revolving credit.
-Sebbene l'indice di \sil sia molto pi\`u alto, abbiamo preferito tenere per questi due
-il clustering sul dataset descritto precedentemente, poich\`e andava a suddividere in
+Sebbene l'indice di \sil sia molto pi\`u alto, abbiamo preferito optare per questi due
+ clustering sul dataset descritto precedentemente, poich\`e andava a suddividere in
 modo pi\`u specifico come il revolving credit veniva utilizzato, in modo da avere 
 pi\`u informazioni su chi poteva essere a rischio default. In ogni caso,
-la scelta dipende dalla granularit\`a a cui si vuole vedere il clustering.
+la scelta dipende dalla granularit\`a con cui si vuole vedere il clustering.
 
-Detto ci\`o analizzando DBSCAN notiamo che sullo stesso dataset esso differisce
-dal fatto che riesce ad individuare un cluster dei \textit{no consumption}.
+Detto ci\`o, analizzando DBSCAN, notiamo che sullo stesso dataset questo differisce
+dagli altri algoritmi di clustering per il fatto che riesce ad individuare un cluster dei \textit{no consumption}.
 
 In conclusione, non pensiamo ci sia un algoritmo che funziona decisamente meglio
 degli altri. Tutto dipende da che \textit{cosa} si vuole trovare. 
