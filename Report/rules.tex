@@ -2,10 +2,9 @@
 In questo capitolo analizzeremo la fase di Pattern Mining.
 Un punto importante di questa fase \`e che utilizzeremo un dataset che,
 differentemente dalle altre fasi, sar\`a privo di outlier. Ci\`o \`e
-stato fatto principalmente per due motivi, il primo \`e che gli outlier
-sono per definizione valori anomali, quindi ripetuti poche volte, di
-conseguenza sarebbero stati inutili nella generazione degli itemset e delle
-successive regole. Il secondo motivo, pi\`u importante, \`e che data la necessaria
+stato fatto principalmente per due motivi: il primo \`e che gli outlier
+sono per definizione valori anomali, di conseguenza sarebbero stati inutili nella generazione degli itemset e delle
+successive regole; il secondo motivo, pi\`u importante, \`e che data la necessaria
 discretizzazione di alcuni attributi (i.e, \texttt{billing amount}), la presenza
 di essi produceva degli intervalli che rendevano pi\`u difficoltoso il pattern
 mining.
@@ -18,7 +17,7 @@ sulla presenza o meno di un ritardo nel pagamento, mettendo in secondo piano la
 gravit\`a del ritardo stesso.
 
 \section{Estrazione degli item pi\`u significativi}
-La prima estrazione di itemset \`e stata effettuata con un supporto del 30\%.
+La prima estrazione di itemset \`e stata effettuata con un supporto minimo del 30\%.
 Si sono estratti circa 2200 item di cui tutti completi e circa 490 massimali.
 La prima cosa che si \`e notato \`e che tutte le regole erano accorpabili e
 riconducibili a pochi insiemi che descriviamo:
@@ -78,7 +77,7 @@ Persone che non utilizzano il credito.
 
 Infine, data la percentuale molto sbilanciata di distribuzione di casi di default
 nel dataset si \`e deciso di eseguire \textit{apriori} su un dataset composto
-da soli casi di default. Con un supporto del 30\% si sono ottenuti 25 itemset,
+da soli casi di default. Con un supporto minimo del 30\% si sono ottenuti 25 itemset,
 di cui 16 completi e 6 massimali.
 
 
@@ -90,7 +89,7 @@ in default.
 	(('ps-aug 0', 'ps-sep 0', 'ps-jun 0' 'default 1'))
 \end{center}
 
-Mentre con una percentuale del 10\% si ottengono 300 item, di cui circa 200 completi
+Mentre con un supporto minimo del 10\% si ottengono 300 item, di cui circa 200 completi
 e solo 15 massimali, tutti riconducibili ad un unico gruppo.
 
 \paragraph{Gruppo 8}
@@ -103,7 +102,7 @@ default.
 
 \section{Estrazione delle association rules pi\`u significative}
 La prima estrazione delle association rules \`e stato effettuata con una percentuale
-di supporto del 30\% e di confindenza del 90\%. Questa estrazione ha portato
+di supporto minimo del 30\% e di confindenza minima del 90\%. Questa estrazione ha portato
 soli due gruppi di regole:
 
 \paragraph{Gruppo 1}
@@ -127,11 +126,11 @@ immediatamente precendenti e successivi. Questo indica che le difficolt\`a di un
 mese si ripercuotono anche successivamente (o sono stati indotte precedentemente).
 Il lift di questa regola \`e la pi\`u bassa registrata, circa 1.60.
 
-Abbassando il supporto fino al 5\% e con una confidenza del 60\% si trova un
+Abbassando il supporto minimo fino al 5\% e con una confidenza minima del 60\% si trova un
 insieme di regole (\textbf{Gruppo 3}) che descrive un tipo di comportamento prudente
-tenuto da una parte del dataset. Dopo una serie di mesi di spesa, non si utilizza
-pi\`u il credito per poter pagare con meno rischi, il debito accumulato
-precedentemente, rientrano dal rischio e non registrando credit default.
+tenuto da una parte del dataset. Dopo una serie di mesi di spesa non si utilizza
+pi\`u il credito,questo per poter pagare con meno rischi il debito accumulato
+precedentemente e riducendo così il rischio di credit default.
 Un'istanza di questa regola \`e riportata successivamente assieme alle misure di
 supporto, confidenza e lift.
 
@@ -142,8 +141,8 @@ supporto, confidenza e lift.
 Data la necessit\`a di costruire un classificatore rule based, abbiamo deciso
 di estrarre le regole su un dataset solamente composto dagli attributi
 \texttt{payment status}, per estrarre con pi\`u facilit\`a le regole che legavano
-essi al caso di default. Tenendo il supporto al 5\% e una confidenza del 70\% si
-sono estratte le seguenti regole.
+essi al caso di default. Tenendo il supporto minimo al 5\% e una confidenza minima del 70\% si
+sono estratte le seguenti regole. 
 Le prime regole estratte descrivevano dei comportamenti molto simili alla regola
 sui \texttt{billing amount}, ovvero:
 
@@ -207,7 +206,7 @@ Notiamo come i risultanti non siano soddisfacenti, specialmente per quanto rigua
 la recall che, per quanto spiegato nel capitolo 3, \`e la misura che consideriamo
 pi\`u importante di tutte. Anche per quanto riguarda la accuracy comunque, si tenga
 conto che il classificatore banale che risponde sempre \textit{no default} avrebbe
-una accuracy dell'82\%, per tanto non pu\`o essere tenuto come dato positivo.
+una accuracy dell'82\%, pertanto non pu\`o essere tenuto come dato positivo.
 Ai fini di un'analisi pi\`u accurata abbiamo anche rieseguito l'estrazione
 delle association rules suddividendo il dataset in training e test set.
 L'estrazione delle regole (eseguita solo sul training set) ha portato a risultati
@@ -232,7 +231,7 @@ molto simili ai precedenti, per questo abbiamo riscontrato risultati molto simil
 Per quanto riguarda i classificatori per i missing values, abbiamo implementato
 un classificatore per l'attributo \texttt{sex}. Abbiamo rieseguto l'estrazione
 delle association rules sul dataset. Le regole con valore di lift pi\`u
-alte sono stati ottenute con un supporto del 5\% e una confidenza del 50\%.
+alte sono stati ottenute con un supporto minimo del 5\% e una confidenza minima del 50\%.
 Non avendo ottenuto regole in cui le istanze di \texttt{sex} occorrevano
 da sole come secondo termine dell'implicazione, abbiamo analizzato solo le
 precondizioni delle regole per le quali una delle due istanze di \texttt{sex}
